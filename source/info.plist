@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.thegreatape.publish.ulysses.notes</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2192DC75-0B14-454E-B89D-5A077F82179D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9F0ACFA4-F701-4266-8610-6003166FE005</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A0908AF6-D0B6-46F4-8D7B-894A74A73BD0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>2192DC75-0B14-454E-B89D-5A077F82179D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A0908AF6-D0B6-46F4-8D7B-894A74A73BD0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A6C8DEEF-F1D6-47DB-9C67-8C27FEB6EE16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>3B5708DA-5A70-45F3-9E1F-F91DDEC94530</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Thomas Mayfield</string>
+	<key>description</key>
+	<string></string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Publish Ulysses Notes</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>script</key>
+				<string>function run() {
+  ObjC.import('stdlib')
+  
+  var notesPath = $.getenv('notes_repository_path');
+  var app = Application("Ulysses");
+  var system = Application("System Events");
+  var window = system.processes.byName("Ulysses").windows[0]
+  var currentlyOpenNotes = window.scrollAreas[0].textAreas[0].value();
+  var folderName = currentlyOpenNotes
+    .split("\n")[0]
+    .replace(/^#\s*/, '')
+    .toLowerCase()
+    .replace(/\s/g, '-');
+  var exportTargetPath = notesPath + folderName;
+  $.system('rm -rf ' + exportTargetPath);
+  $.system('mkdir ' + exportTargetPath);
+  exportNotes(exportTargetPath);
+  
+  function exportNotes(path) {
+    app.activate();
+  
+    var exportButton = window.toolbars[0].buttons.whose({description: "Quick Export"})[0];
+    exportButton.actions['AXPress'].perform();
+    try {
+      exportButton.popOvers[0].buttons.whose({description: "Save to location"}).actions['AXPress'].perform();
+    } catch(e){
+      // even though this works and opens the button, it also seems to 
+      // raise a "message not understood" error. damned if I know why.
+      // we seem to be able to just ignore it and move on.
+      console.log(e.toString());
+    }
+    delay(1);
+    system.keystroke("g", {using: ["shift down", "command down"]}); // bring up path entry dialog
+    delay(1);
+    system.keystroke(path); // enter path
+    system.keyCode(36); // press return to select path
+    delay(2);
+    system.keyCode(36); // press return to begin export
+  }
+  return exportTargetPath;
+}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>7</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>16039760-F173-4AB8-9C73-DA7401D5DE23</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>Url copied to clipboard</string>
+				<key>title</key>
+				<string>Note published to {query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>A6C8DEEF-F1D6-47DB-9C67-8C27FEB6EE16</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>pun</string>
+				<key>subtext</key>
+				<string>Using the currently open sheet</string>
+				<key>text</key>
+				<string>Publish Ulysses Notes</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>#!/bin/bash
+pushd $notes_repository_path &gt; /dev/null
+
+git status | grep 'nothing to commit' &gt; /dev/null
+if [ "$?" -eq 0 ]; then
+  echo "No changes to publish";
+else
+	git add . &gt; /dev/null
+	git commit -m "Ulysses note publish `date`" &gt; /dev/null
+	git push origin HEAD &gt; /dev/null
+	git show HEAD | grep "+++ b.*index.html" | sed "s/\+\+\+ b\///" | sed "s/index.html//" | xargs -I{} echo "$site_domain/{}"
+fi</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>inputstring</key>
+				<string>{query}</string>
+				<key>matchcasesensitive</key>
+				<false/>
+				<key>matchmode</key>
+				<integer>2</integer>
+				<key>matchstring</key>
+				<string>http</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.filter</string>
+			<key>uid</key>
+			<string>A0908AF6-D0B6-46F4-8D7B-894A74A73BD0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>3B5708DA-5A70-45F3-9E1F-F91DDEC94530</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+				<key>title</key>
+				<string>No changes to publish</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>9F0ACFA4-F701-4266-8610-6003166FE005</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>inputstring</key>
+				<string>{query}</string>
+				<key>matchcasesensitive</key>
+				<false/>
+				<key>matchmode</key>
+				<integer>2</integer>
+				<key>matchstring</key>
+				<string>No changes to publish</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.filter</string>
+			<key>uid</key>
+			<string>2192DC75-0B14-454E-B89D-5A077F82179D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>## Setup
+
+Set notes_repository_path to the absolute path of the git repository where store the HTML exports.
+
+Set site_domain to the domain of where the notes are hosted—this will be used to construct the url that's copied to the clipboard after exporting.</string>
+	<key>uidata</key>
+	<dict>
+		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
+		<dict>
+			<key>xpos</key>
+			<integer>260</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>2192DC75-0B14-454E-B89D-5A077F82179D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>630</integer>
+			<key>ypos</key>
+			<integer>350</integer>
+		</dict>
+		<key>2C99F6F1-EF16-4CF1-9762-5D05A1FFAA4D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>50</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>3B5708DA-5A70-45F3-9E1F-F91DDEC94530</key>
+		<dict>
+			<key>xpos</key>
+			<integer>790</integer>
+			<key>ypos</key>
+			<integer>170</integer>
+		</dict>
+		<key>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</key>
+		<dict>
+			<key>xpos</key>
+			<integer>440</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>9F0ACFA4-F701-4266-8610-6003166FE005</key>
+		<dict>
+			<key>xpos</key>
+			<integer>790</integer>
+			<key>ypos</key>
+			<integer>320</integer>
+		</dict>
+		<key>A0908AF6-D0B6-46F4-8D7B-894A74A73BD0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>630</integer>
+			<key>ypos</key>
+			<integer>80</integer>
+		</dict>
+		<key>A6C8DEEF-F1D6-47DB-9C67-8C27FEB6EE16</key>
+		<dict>
+			<key>xpos</key>
+			<integer>790</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>notes_repository_path</key>
+		<string></string>
+		<key>site_domain</key>
+		<string></string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array>
+		<string>notes_repository_path</string>
+		<string>site_domain</string>
+	</array>
+	<key>version</key>
+	<string>0.1</string>
+	<key>webaddress</key>
+	<string>https://thegreata.pe</string>
+</dict>
+</plist>
