@@ -110,6 +110,40 @@
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>#!/bin/bash
+pushd $notes_repository_path &gt; /dev/null
+
+git status | grep 'nothing to commit' &gt; /dev/null
+if [ "$?" -eq 0 ]; then
+  echo "No changes to publish";
+else
+	git add .
+	git commit -m "Ulysses note publish `date`" &gt; /dev/null
+	git push origin HEAD &gt; /dev/null
+	git show HEAD | grep "+++ b.*index.html" | sed "s/\+\+\+ b\///" | sed "s/index.html//" | xargs -I{} echo "$site_domain/{}"
+fi</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
 				<integer>68</integer>
 				<key>script</key>
 				<string>function run() {
@@ -122,9 +156,9 @@
   var currentlyOpenNotes = window.scrollAreas[0].textAreas[0].value();
   var folderName = currentlyOpenNotes
     .split("\n")[0]
-    .replace(/^#\s*/, '')
+    .replace(/(^#\s*|\/)/g, '')
     .toLowerCase()
-    .replace(/\s/g, '-');
+    .replace(/\s+/g, '-');
   var exportTargetPath = notesPath + folderName;
   $.system('rm -rf ' + exportTargetPath);
   $.system('mkdir ' + exportTargetPath);
@@ -173,7 +207,7 @@
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
-				<true/>
+				<false/>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
@@ -212,42 +246,8 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>#!/bin/bash
-pushd $notes_repository_path &gt; /dev/null
-
-git status | grep 'nothing to commit' &gt; /dev/null
-if [ "$?" -eq 0 ]; then
-  echo "No changes to publish";
-else
-	git add . &gt; /dev/null
-	git commit -m "Ulysses note publish `date`" &gt; /dev/null
-	git push origin HEAD &gt; /dev/null
-	git show HEAD | grep "+++ b.*index.html" | sed "s/\+\+\+ b\///" | sed "s/index.html//" | xargs -I{} echo "$site_domain/{}"
-fi</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>59ECF1EE-E6DD-4F60-954F-7386C8F95C96</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>inputstring</key>
-				<string>{query}</string>
+				<string></string>
 				<key>matchcasesensitive</key>
 				<false/>
 				<key>matchmode</key>
@@ -304,7 +304,7 @@ fi</string>
 			<key>config</key>
 			<dict>
 				<key>inputstring</key>
-				<string>{query}</string>
+				<string></string>
 				<key>matchcasesensitive</key>
 				<false/>
 				<key>matchmode</key>
