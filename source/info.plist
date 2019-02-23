@@ -321,11 +321,19 @@ fi</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>## Setup
+	<string>One-command publishing of Ulysses notes!
 
-Set notes_repository_path to the absolute path of the git repository where store the HTML exports.
+This workflow takes the currently open Ulysses note, automates the steps of exporting it to nicely formatted HTML, publishes it to a url on a Github-pages backed site, and copies that url to the clipboard.
 
-Set site_domain to the domain of where the notes are hosted—this will be used to construct the url that's copied to the clipboard after exporting.</string>
+## Setup Instructions
+
+Setup: 
+1. If you don’t already have one, [set up your Github pages site] and make sure [git] is installed on your computer.
+2. Install this workflow from Packal
+3. Configure the environment variables in the workflow:
+	 1. `notes_repository_path`: set to the absolute path of your Github pages repo where you want the notes html to be published.
+	2. `site_domain`: set to the domain where the notes are hosted—this will be used to construct the url that's copied to the clipboard after exporting.
+4. With the Ulysses note you want to publish open, bring up Alfred, type “pun” and hit enter.</string>
 	<key>uidata</key>
 	<dict>
 		<key>16039760-F173-4AB8-9C73-DA7401D5DE23</key>
