@@ -1,5 +1,5 @@
 # Publish Ulysses Notes
-An Alfred workflow for quick publishing of Ulysses notes to a git-backed site
+An Alfred workflow for one-command publishing of Ulysses notes to a git-backed site
 
 ## Demo
 ![Demo gif](img/pun-demo.gif)
